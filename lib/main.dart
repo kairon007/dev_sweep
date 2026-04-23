@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/router/app_router.dart';
+import 'core/theme/app_theme.dart';
 
 void main() {
   runApp(
@@ -24,13 +25,7 @@ class _DevSweepAppState extends ConsumerState<DevSweepApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'DevSweep',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.blueAccent,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.darkTheme,
       routerConfig: _appRouter.config(),
     );
   }
