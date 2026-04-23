@@ -10,6 +10,7 @@ class ScanItem {
   final String displayName;
   final int sizeBytes;
   final ScanCategory category;
+  final DateTime? lastModified;
 
   ScanItem({
     required this.id,
@@ -17,6 +18,7 @@ class ScanItem {
     required this.displayName,
     required this.sizeBytes,
     required this.category,
+    this.lastModified,
   });
 
   String get formattedSize {

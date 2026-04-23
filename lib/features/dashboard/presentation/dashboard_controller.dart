@@ -14,7 +14,12 @@ class DashboardController extends _$DashboardController {
 
   Future<List<ScanItem>> _scanSafeItems() async {
     final scanner = ref.read(scannerEngineProvider);
-    return scanner.scanSafeItems();
+    final results = await Future.wait([
+      scanner.scanSafeItems(),
+      scanner.scanReviewItems(),
+      scanner.scanProjects(),
+    ]);
+    return results.expand((list) => list).toList();
   }
 
   Future<void> rescan() async {
@@ -38,6 +43,17 @@ class DashboardController extends _$DashboardController {
     }
 
     // Refresh the list after cleanup
+    await rescan();
+  }
+
+  Future<void> deleteSpecificItems(List<String> pathsToDelete) async {
+    final executor = ref.read(actionExecutorProvider);
+    state = const AsyncValue.loading();
+
+    for (final path in pathsToDelete) {
+      await executor.moveToTrash(path);
+    }
+
     await rescan();
   }
 }

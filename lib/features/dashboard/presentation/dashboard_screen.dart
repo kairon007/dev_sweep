@@ -2,7 +2,9 @@ import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/engine/models/scan_item.dart';
 import 'dashboard_controller.dart';
+import 'selective_cleanup_dialog.dart';
 
 @RoutePage()
 class DashboardScreen extends ConsumerWidget {
@@ -13,14 +15,23 @@ class DashboardScreen extends ConsumerWidget {
     final state = ref.watch(dashboardControllerProvider);
     
     // Calculate total freeable space (safe items only for now)
-    int totalBytes = 0;
+    int totalSafeBytes = 0;
+    int totalReviewBytes = 0;
+    int totalProjectBytes = 0;
+
     if (state.hasValue && state.value != null) {
       for (final item in state.value!) {
-        totalBytes += item.sizeBytes;
+        if (item.category == ScanCategory.safe) {
+          totalSafeBytes += item.sizeBytes;
+        } else if (item.category == ScanCategory.review) {
+          totalReviewBytes += item.sizeBytes;
+        } else if (item.category == ScanCategory.project) {
+          totalProjectBytes += item.sizeBytes;
+        }
       }
     }
     
-    final formattedTotal = _formatBytes(totalBytes);
+    final formattedSafeTotal = _formatBytes(totalSafeBytes);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +52,7 @@ class DashboardScreen extends ConsumerWidget {
             Text(
               state.isLoading 
                   ? 'Scanning...' 
-                  : 'You can free: $formattedTotal',
+                  : 'You can free: $formattedSafeTotal safely',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             if (state.hasError) 
@@ -59,23 +70,37 @@ class DashboardScreen extends ConsumerWidget {
                     title: 'Safe Cleanup',
                     subtitle: 'DerivedData, Gradle Caches',
                     actionLabel: state.isLoading ? '...' : 'Clean Safe Items',
-                    onAction: state.isLoading || totalBytes == 0
+                    onAction: state.isLoading || totalSafeBytes == 0
                         ? null 
-                        : () => ref.read(dashboardControllerProvider.notifier).cleanSafeItems(),
+                        : () => _showOverviewDialog(context, ref, state.value!),
                   ),
                   _buildSectionCard(
                     context,
                     title: 'Review Required',
-                    subtitle: 'Simulators, SDKs (Coming soon)',
-                    actionLabel: 'Review',
-                    onAction: null,
+                    subtitle: 'Simulators, SDKs',
+                    actionLabel: state.isLoading ? '...' : 'Review',
+                    onAction: state.isLoading || totalReviewBytes == 0
+                        ? null
+                        : () => _showSelectiveDialog(
+                              context, 
+                              ref, 
+                              state.value!.where((i) => i.category == ScanCategory.review).toList(),
+                              'Review SDKs & Simulators',
+                            ),
                   ),
                   _buildSectionCard(
                     context,
                     title: 'Projects',
-                    subtitle: 'Old/Large Projects (Coming soon)',
-                    actionLabel: 'Prune',
-                    onAction: null,
+                    subtitle: 'Old/Large Projects',
+                    actionLabel: state.isLoading ? '...' : 'Prune',
+                    onAction: state.isLoading || totalProjectBytes == 0
+                        ? null
+                        : () => _showSelectiveDialog(
+                              context, 
+                              ref, 
+                              state.value!.where((i) => i.category == ScanCategory.project).toList(),
+                              'Prune Projects',
+                            ),
                   ),
                 ],
               ),
@@ -119,6 +144,66 @@ class DashboardScreen extends ConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Future<void> _showOverviewDialog(BuildContext context, WidgetRef ref, List<ScanItem> items) async {
+    final safeItems = items.where((i) => i.category == ScanCategory.safe).toList();
+    
+    if (safeItems.isEmpty) return;
+
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Review Safe Cleanup'),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: safeItems.length,
+              itemBuilder: (context, index) {
+                final item = safeItems[index];
+                return ListTile(
+                  leading: const Icon(Icons.folder, color: Colors.blueAccent),
+                  title: Text(item.displayName),
+                  subtitle: Text(item.path, style: const TextStyle(fontSize: 12)),
+                  trailing: Text(item.formattedSize, style: const TextStyle(fontWeight: FontWeight.bold)),
+                );
+              },
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('Cancel'),
+            ),
+            FilledButton.icon(
+              onPressed: () {
+                Navigator.of(context).pop();
+                ref.read(dashboardControllerProvider.notifier).cleanSafeItems();
+              },
+              icon: const Icon(Icons.delete_outline),
+              label: const Text('Confirm Cleanup'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> _showSelectiveDialog(BuildContext context, WidgetRef ref, List<ScanItem> items, String title) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return SelectiveCleanupDialog(
+          title: title,
+          items: items,
+          onConfirm: (selectedPaths) {
+            ref.read(dashboardControllerProvider.notifier).deleteSpecificItems(selectedPaths);
+          },
+        );
+      },
     );
   }
 }
