@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevSweep | Main Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed-variant": "#604100",
+                        "on-primary-container": "#400071",
+                        "outline": "#988d9f",
+                        "on-primary-fixed-variant": "#6900b3",
+                        "on-tertiary-fixed": "#281900",
+                        "surface": "#131313",
+                        "primary-fixed-dim": "#ddb7ff",
+                        "tertiary": "#fabc4e",
+                        "on-tertiary-container": "#3a2600",
+                        "secondary-fixed": "#acedff",
+                        "primary-fixed": "#f0dbff",
+                        "secondary-fixed-dim": "#4cd7f6",
+                        "on-secondary": "#003640",
+                        "secondary": "#4cd7f6",
+                        "on-primary-fixed": "#2c0051",
+                        "background": "#131313",
+                        "inverse-on-surface": "#313030",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container": "#201f1f",
+                        "on-tertiary": "#432c00",
+                        "surface-container-highest": "#353534",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary-container": "#03b5d3",
+                        "surface-bright": "#3a3939",
+                        "tertiary-fixed": "#ffdead",
+                        "on-error": "#690005",
+                        "surface-variant": "#353534",
+                        "tertiary-container": "#bd871a",
+                        "on-surface-variant": "#cfc2d6",
+                        "error": "#ffb4ab",
+                        "on-secondary-container": "#00424e",
+                        "surface-tint": "#ddb7ff",
+                        "on-primary": "#490080",
+                        "surface-container-high": "#2a2a2a",
+                        "on-surface": "#e5e2e1",
+                        "error-container": "#93000a",
+                        "primary": "#ddb7ff",
+                        "surface-dim": "#131313",
+                        "primary-container": "#b76dff",
+                        "outline-variant": "#4d4354",
+                        "surface-container-low": "#1c1b1b",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed": "#001f26",
+                        "tertiary-fixed-dim": "#fabc4e",
+                        "on-background": "#e5e2e1",
+                        "inverse-primary": "#842bd2",
+                        "on-secondary-fixed-variant": "#004e5c"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "lg": "12px",
+                        "unit": "4px",
+                        "container-padding": "8px",
+                        "xs": "2px",
+                        "md": "8px",
+                        "sm": "4px",
+                        "gutter": "1px"
+                    },
+                    "fontFamily": {
+                        "ui-label-sm": ["Inter"],
+                        "code-block": ["JetBrains Mono"],
+                        "data-mono-md": ["JetBrains Mono"],
+                        "data-mono-sm": ["JetBrains Mono"],
+                        "data-mono-xs": ["JetBrains Mono"],
+                        "ui-label-md": ["Inter"]
+                    },
+                    "fontSize": {
+                        "ui-label-sm": ["11px", {"lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "code-block": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "data-mono-md": ["13px", {"lineHeight": "18px", "fontWeight": "500"}],
+                        "data-mono-sm": ["12px", {"lineHeight": "16px", "fontWeight": "400"}],
+                        "data-mono-xs": ["10px", {"lineHeight": "12px", "fontWeight": "400"}],
+                        "ui-label-md": ["13px", {"lineHeight": "16px", "fontWeight": "500"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            font-size: 16px;
+        }
+        body {
+            background-color: #0D0D0D;
+            color: #E5E5E5;
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0D0D0D;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #262626;
+        }
+        .matrix-segment {
+            transition: opacity 0.1s ease;
+        }
+        .matrix-segment:hover {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body class="flex flex-col h-screen overflow-hidden font-ui-label-md">
+<!-- TopNavBar -->
+<nav class="bg-neutral-950 flex justify-between items-center w-full h-8 px-2 border-b border-neutral-800 text-neutral-500 font-mono text-xs tracking-tight fixed top-0 z-50">
+<div class="flex items-center gap-4">
+<span class="font-mono font-bold text-purple-500">DEV_UTIL</span>
+<div class="flex gap-3">
+<a class="text-purple-400 font-bold border-b-2 border-purple-500" href="#">/root</a>
+<a class="hover:bg-neutral-900 hover:text-neutral-200 transition-colors duration-75" href="#">/src</a>
+<a class="hover:bg-neutral-900 hover:text-neutral-200 transition-colors duration-75" href="#">main.rs</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined hover:text-neutral-200 cursor-pointer">settings</span>
+<span class="material-symbols-outlined hover:text-neutral-200 cursor-pointer">terminal</span>
+</div>
+</nav>
+<div class="flex flex-1 pt-8 pb-6">
+<!-- SideNavBar -->
+<aside class="bg-neutral-900 flex flex-col items-center py-4 w-12 h-full border-r border-neutral-800 font-mono text-[10px] uppercase">
+<div class="mb-8">
+<span class="text-purple-500 font-black">CLI</span>
+</div>
+<div class="flex flex-col gap-6 items-center flex-1">
+<div class="bg-neutral-800 text-purple-400 border-l-2 border-purple-500 p-2 scale-95 transition-transform duration-75 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="folder">folder</span>
+</div>
+<div class="text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800 p-2 scale-95 transition-transform duration-75 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</div>
+<div class="text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800 p-2 scale-95 transition-transform duration-75 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="account_tree">account_tree</span>
+</div>
+<div class="text-neutral-500 hover:text-neutral-200 hover:bg-neutral-800 p-2 scale-95 transition-transform duration-75 cursor-pointer">
+<span class="material-symbols-outlined" data-icon="bug_report">bug_report</span>
+</div>
+</div>
+<div class="mt-auto flex flex-col gap-4 items-center">
+<span class="material-symbols-outlined text-purple-400" data-icon="check_circle">check_circle</span>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 flex flex-col overflow-y-auto bg-[#0D0D0D]">
+<!-- Hero: Storage Matrix -->
+<section class="p-6 border-b border-neutral-800">
+<div class="flex justify-between items-end mb-4">
+<div>
+<h1 class="font-data-mono-md text-primary tracking-tighter uppercase mb-1">Storage_Matrix_v4.0</h1>
+<p class="text-neutral-500 font-data-mono-xs">BLOCK_ADDRESS: 0x7FF0012E -&gt; 0x8AA9921B</p>
+</div>
+<button class="bg-[#C084FC] text-[#0D0D0D] px-4 h-7 font-data-mono-sm font-bold flex items-center gap-2 hover:bg-primary-fixed-dim transition-colors">
+<span class="material-symbols-outlined text-[14px]" style="font-variation-settings: 'FILL' 1;">terminal</span>
+                        SCAN &amp; OPTIMIZE
+                    </button>
+</div>
+<div class="grid grid-cols-16 lg:grid-cols-24 gap-1 h-24">
+<!-- Manual Matrix Generation for 144 segments (6x24) -->
+<script>
+                        const matrixContainer = document.querySelector('.grid-cols-16');
+                        for (let i = 0; i < 144; i++) {
+                            const div = document.createElement('div');
+                            const isFilled = Math.random() > 0.4;
+                            const isHeavy = Math.random() > 0.8;
+                            const colorClass = isFilled ? (isHeavy ? 'bg-purple-600' : 'bg-purple-400') : 'bg-neutral-800';
+                            div.className = `matrix-segment ${colorClass} h-full w-full opacity-60 hover:opacity-100 transition-opacity cursor-crosshair`;
+                            div.title = `BLOCK_0x${i.toString(16).toUpperCase().padStart(4, '0')}`;
+                            matrixContainer.appendChild(div);
+                        }
+                    </script>
+</div>
+<div class="flex justify-between mt-2 font-data-mono-xs text-neutral-600">
+<span>INDEX_START [0x0000]</span>
+<div class="flex gap-4">
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-purple-600"></span> USED</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-purple-400"></span> RECLAIMABLE</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 bg-neutral-800"></span> VACANT</span>
+</div>
+<span>INDEX_END [0xFFFF]</span>
+</div>
+</section>
+<!-- Dashboard Body -->
+<div class="flex flex-col">
+<!-- Cache Clusters Section -->
+<div class="px-6 py-4 border-b border-neutral-800 bg-surface-container-lowest">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary text-sm">database</span>
+<h2 class="font-data-mono-md text-white uppercase tracking-widest">Cache_Clusters</h2>
+<span class="text-neutral-500 text-[10px] ml-auto">TOTAL_SIZE: 142.8 GB</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+<div class="border-l border-purple-500 pl-4 py-1">
+<div class="flex justify-between items-start mb-1">
+<span class="font-data-mono-sm text-neutral-200">gradle_daemon</span>
+<span class="font-data-mono-sm text-secondary">42.1 GB</span>
+</div>
+<p class="text-neutral-500 font-data-mono-xs mb-3">~/.gradle/caches</p>
+<button class="border border-neutral-700 px-3 py-1 text-on-surface hover:border-purple-500 font-data-mono-xs transition-colors">PURGE</button>
+</div>
+<div class="border-l border-purple-500 pl-4 py-1">
+<div class="flex justify-between items-start mb-1">
+<span class="font-data-mono-sm text-neutral-200">xcode_derived_data</span>
+<span class="font-data-mono-sm text-secondary">88.4 GB</span>
+</div>
+<p class="text-neutral-500 font-data-mono-xs mb-3">~/Library/Developer/Xcode</p>
+<button class="border border-neutral-700 px-3 py-1 text-on-surface hover:border-purple-500 font-data-mono-xs transition-colors">PURGE</button>
+</div>
+<div class="border-l border-purple-500 pl-4 py-1">
+<div class="flex justify-between items-start mb-1">
+<span class="font-data-mono-sm text-neutral-200">npm_global_cache</span>
+<span class="font-data-mono-sm text-secondary">12.3 GB</span>
+</div>
+<p class="text-neutral-500 font-data-mono-xs mb-3">~/.npm/_cacache</p>
+<button class="border border-neutral-700 px-3 py-1 text-on-surface hover:border-purple-500 font-data-mono-xs transition-colors">PURGE</button>
+</div>
+</div>
+</div>
+<!-- Environment Bloat Section -->
+<div class="px-6 py-6 border-b border-neutral-800">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary text-sm">developer_board</span>
+<h2 class="font-data-mono-md text-white uppercase tracking-widest">Environment_Bloat</h2>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-data-mono-sm border-collapse">
+<thead>
+<tr class="text-neutral-500 border-b border-neutral-800">
+<th class="pb-2 font-normal">ENTITY_IDENTIFIER</th>
+<th class="pb-2 font-normal">ALLOCATION</th>
+<th class="pb-2 font-normal">LAST_ACCESS</th>
+<th class="pb-2 font-normal text-right">ACTION</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-neutral-800">
+<tr class="hover:bg-neutral-900 transition-colors">
+<td class="py-3">
+<div class="flex flex-col">
+<span class="text-neutral-200">iOS 17.2 Simulator (iPhone 15 Pro)</span>
+<span class="text-neutral-600 text-[10px]">GUID: 82F-11A-99B</span>
+</div>
+</td>
+<td class="py-3 text-secondary">4.2 GB</td>
+<td class="py-3 text-neutral-500">2023.11.12_14:30</td>
+<td class="py-3 text-right">
+<button class="text-purple-400 hover:text-white"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<tr class="hover:bg-neutral-900 transition-colors">
+<td class="py-3">
+<div class="flex flex-col">
+<span class="text-neutral-200">Android SDK Platform 31</span>
+<span class="text-neutral-600 text-[10px]">/usr/local/share/android-sdk/platforms</span>
+</div>
+</td>
+<td class="py-3 text-secondary">1.8 GB</td>
+<td class="py-3 text-neutral-500">2024.01.05_09:12</td>
+<td class="py-3 text-right">
+<button class="text-purple-400 hover:text-white"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+<tr class="hover:bg-neutral-900 transition-colors">
+<td class="py-3">
+<div class="flex flex-col">
+<span class="text-neutral-200">Docker Image: redis:alpine</span>
+<span class="text-neutral-600 text-[10px]">ID: sha256:7f08c3...</span>
+</div>
+</td>
+<td class="py-3 text-secondary">520 MB</td>
+<td class="py-3 text-neutral-500">2024.02.19_22:04</td>
+<td class="py-3 text-right">
+<button class="text-purple-400 hover:text-white"><span class="material-symbols-outlined">delete</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Project Pruning -->
+<div class="px-6 py-6">
+<div class="flex items-center gap-2 mb-4">
+<span class="material-symbols-outlined text-secondary text-sm">account_tree</span>
+<h2 class="font-data-mono-md text-white uppercase tracking-widest">Project_Pruning</h2>
+<span class="text-neutral-500 text-[10px] ml-auto">DETECTED_DORMANT: 12 REPOS</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
+<!-- Project Cards without "boxy" look, using borders -->
+<div class="group border border-neutral-800 p-3 hover:border-purple-500 transition-colors bg-neutral-900/30">
+<div class="flex justify-between items-start mb-2">
+<span class="font-data-mono-sm text-white">legacy-auth-service</span>
+<span class="bg-neutral-800 text-amber-500 text-[9px] px-1 border border-amber-900/50">DORMANT</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-[10px] font-data-mono-sm text-neutral-500">
+<p>LAST_COMMIT: 412d ago</p>
+<p>BRANCH: <span class="text-purple-400">feature/v2-migration</span></p>
+</div>
+<span class="material-symbols-outlined text-neutral-600 group-hover:text-purple-500 cursor-pointer">archive</span>
+</div>
+</div>
+<div class="group border border-neutral-800 p-3 hover:border-purple-500 transition-colors bg-neutral-900/30">
+<div class="flex justify-between items-start mb-2">
+<span class="font-data-mono-sm text-white">temp-ui-experiments</span>
+<span class="bg-neutral-800 text-amber-500 text-[9px] px-1 border border-amber-900/50">DORMANT</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-[10px] font-data-mono-sm text-neutral-500">
+<p>LAST_COMMIT: 104d ago</p>
+<p>BRANCH: <span class="text-purple-400">master</span></p>
+</div>
+<span class="material-symbols-outlined text-neutral-600 group-hover:text-purple-500 cursor-pointer">archive</span>
+</div>
+</div>
+<div class="group border border-neutral-800 p-3 hover:border-purple-500 transition-colors bg-neutral-900/30">
+<div class="flex justify-between items-start mb-2">
+<span class="font-data-mono-sm text-white">scraper-bot-poc</span>
+<span class="bg-neutral-800 text-amber-500 text-[9px] px-1 border border-amber-900/50">DORMANT</span>
+</div>
+<div class="flex justify-between items-end">
+<div class="text-[10px] font-data-mono-sm text-neutral-500">
+<p>LAST_COMMIT: 288d ago</p>
+<p>BRANCH: <span class="text-purple-400">dev</span></p>
+</div>
+<span class="material-symbols-outlined text-neutral-600 group-hover:text-purple-500 cursor-pointer">archive</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-neutral-950 flex justify-between items-center px-4 w-full h-6 border-t border-neutral-800 fixed bottom-0 z-50 text-[9px] font-mono uppercase text-neutral-600">
+<div class="flex items-center gap-4">
+<span class="text-purple-400">SYSTEM_STABLE_0x2F</span>
+<div class="flex gap-4">
+<span class="cursor-pointer hover:text-purple-300 transition-colors">Toggle Log</span>
+<span class="cursor-pointer hover:text-purple-300 transition-colors">Clear</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="flex items-center gap-1 text-secondary"><span class="w-1.5 h-1.5 bg-secondary rounded-full"></span> AGENT_ACTIVE</span>
+<span class="text-error cursor-pointer hover:text-purple-300 transition-colors">Kill Process</span>
+</div>
+</footer>
+</body></html>
